@@ -1,4 +1,7 @@
-package brainacad.org.DbDAO.EmployeeContactDAOTest;
+package brainacad.org.DbDAO.CustomerDAOTest;
 
-public interface CustomerDAOTest {
+import brainacad.org.DbDAO.CRUD_InterfaceTest;
+import brainacad.org.Models.Customer.Customer;
+
+public interface CustomerDAOTest extends CRUD_InterfaceTest<Customer> {
 }

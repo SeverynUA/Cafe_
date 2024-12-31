@@ -1,4 +1,8 @@
-package brainacad.org.Dao.DB_Dao.CategoriesDAO;
+package brainacad.org.Dao.DB_Dao.CategoryDAO;
 
-public interface CategoryDAO {
+import brainacad.org.Dao.CRUD_Interface;
+
+public interface CategoryDAO extends CRUD_Interface
+{
+
 }

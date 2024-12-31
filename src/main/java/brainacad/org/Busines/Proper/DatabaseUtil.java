@@ -1,15 +1,12 @@
-package brainacad.org.Busines;
+package brainacad.org.Busines.Proper;
+
+import lombok.Getter;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.sql.*;
 
-import java.sql.*;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +17,11 @@ public class DatabaseUtil {
     private static final String URL;
     private static final String USER;
     private static final String PASSWORD;
-    private static final String SQL_FILE_PATH;
+
+    @Getter
+    private static final String CREATE_TABLES_FILE_PATH;
+    @Getter
+    private static final String INIT_FILE_PATH;
 
     static {
         Properties properties = PropertyFactory.getProperties();
@@ -31,25 +32,31 @@ public class DatabaseUtil {
         URL = properties.getProperty("db.url");
         USER = properties.getProperty("db.username");
         PASSWORD = properties.getProperty("db.password");
-        SQL_FILE_PATH = properties.getProperty("db.sql_file_path");
+        CREATE_TABLES_FILE_PATH = properties.getProperty("db.create_tables_file_path");
+        INIT_FILE_PATH = properties.getProperty("db.init_file_path");
 
-        if (URL == null || USER == null || PASSWORD == null || SQL_FILE_PATH == null) {
+        if (URL == null || USER == null || PASSWORD == null) {
             throw new IllegalStateException("Не всі необхідні властивості присутні у файлі конфігурації.");
         }
-    }
 
-    public static String getSqlFilePath() {
-        return SQL_FILE_PATH;
+        if (CREATE_TABLES_FILE_PATH == null || INIT_FILE_PATH == null) {
+            throw new IllegalStateException("Не всі необхідні SQL-файли вказані у файлі конфігурації.");
+        }
     }
 
     /**
      * Отримання з'єднання з базою даних.
      */
     public static Connection getConnection() throws SQLException {
-        if (URL == null || USER == null || PASSWORD == null) {
-            throw new IllegalStateException("Database configuration is missing.");
+        String url = PropertyFactory.getProperties().getProperty("db.url");
+        String user = PropertyFactory.getProperties().getProperty("db.username");
+        String password = PropertyFactory.getProperties().getProperty("db.password");
+
+        if (url == null || user == null || password == null) {
+            throw new IllegalStateException("Конфігурація бази даних не вказана.");
         }
-        Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+
+        Connection connection = DriverManager.getConnection(url, user, password);
         logger.info("Підключення до бази даних встановлено.");
         return connection;
     }
@@ -104,23 +111,25 @@ public class DatabaseUtil {
     /**
      * Виконує SQL-файл для ініціалізації бази даних.
      */
-    public static void executeSQLFile() {
-        try (Connection connection = getConnection();
-             Statement statement = connection.createStatement();
-             BufferedReader reader = new BufferedReader(new FileReader(SQL_FILE_PATH))) {
+    public static void executeSQLFiles(String... filePaths) {
+        for (String filePath : filePaths) {
+            try (Connection connection = getConnection();
+                 Statement statement = connection.createStatement();
+                 BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
 
-            StringBuilder sql = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sql.append(line).append("\n");
+                StringBuilder sql = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sql.append(line).append("\n");
+                }
+
+                statement.execute(sql.toString());
+                logger.info("SQL-файл виконано успішно: " + filePath);
+
+            } catch (IOException | SQLException e) {
+                logger.log(Level.SEVERE, "Помилка під час виконання SQL-файлу: " + filePath, e);
+                throw new RuntimeException("Помилка під час виконання SQL-файлу: " + filePath, e);
             }
-
-            statement.execute(sql.toString());
-            logger.info("SQL-файл успішно виконаний.");
-
-        } catch (IOException | SQLException e) {
-            logger.log(Level.SEVERE, "Помилка під час виконання SQL-файлу.", e);
-            throw new RuntimeException("Помилка під час виконання SQL-файлу.", e);
         }
     }
 
@@ -133,38 +142,33 @@ public class DatabaseUtil {
 
             // Видалення всіх таблиць
             String dropTablesQuery = """
-            DO $$ DECLARE
-            r RECORD;
-            BEGIN
-                FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
-                    EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE';
-                END LOOP;
-            END $$;
-            """;
+        DO $$ DECLARE
+        r RECORD;
+        BEGIN
+            FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
+                EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE';
+            END LOOP;
+        END $$;
+        """;
             statement.execute(dropTablesQuery);
-            logger.info("Всі таблиці успішно видалені.");
 
-            // Видалення всіх ENUM-типів
+            // Видалення ENUM-типів
             String dropEnumsQuery = """
-            DO $$ DECLARE
-            r RECORD;
-            BEGIN
-                FOR r IN (SELECT typname FROM pg_type WHERE typtype = 'e' AND typnamespace = 'public'::regnamespace) LOOP
-                    EXECUTE 'DROP TYPE IF EXISTS ' || quote_ident(r.typname) || ' CASCADE';
-                END LOOP;
-            END $$;
-            """;
+        DO $$ DECLARE
+        r RECORD;
+        BEGIN
+            FOR r IN (SELECT typname FROM pg_type WHERE typtype = 'e' AND typnamespace = 'public'::regnamespace) LOOP
+                EXECUTE 'DROP TYPE IF EXISTS ' || quote_ident(r.typname) || ' CASCADE';
+            END LOOP;
+        END $$;
+        """;
             statement.execute(dropEnumsQuery);
-            logger.info("Всі ENUM-типи успішно видалені.");
-
-            // Виконання SQL-файлу
-            executeSQLFile();
 
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Помилка під час скидання бази даних.", e);
-            throw new RuntimeException("Помилка під час скидання бази даних.", e);
+            throw new RuntimeException("Помилка під час скидання бази даних: " + e.getMessage(), e);
         }
     }
+
 
     /**
      * Встановлює параметри для PreparedStatement.

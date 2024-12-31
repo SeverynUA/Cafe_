@@ -1,4 +1,4 @@
-package brainacad.org.DbDAO.EmployeeContact;
+package brainacad.org.DbDAO.EmployeeContactDAOTest;
 import brainacad.org.DbDAO.CRUD_InterfaceTest;
 import brainacad.org.Models.EmployeeInfo.EmployeeContact;
 import org.junit.jupiter.api.Test;

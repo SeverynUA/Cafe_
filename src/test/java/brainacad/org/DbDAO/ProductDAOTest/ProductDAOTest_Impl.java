@@ -1,114 +1,117 @@
 package brainacad.org.DbDAO.ProductDAOTest;
-import brainacad.org.Busines.Proper.DatabaseUtil;
-import brainacad.org.Busines.Proper.PropertyReader;
 import brainacad.org.Dao.DB_Dao.ProductDAO.ProductDAO_impl;
 import brainacad.org.Models.Categories.Category;
 import brainacad.org.Models.Categories.SubCategory;
 import brainacad.org.Models.Language.Language;
 import brainacad.org.Models.Product.Product;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Properties;;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class ProductDAOTest {
-
+public class ProductDAOTest_Impl implements ProductDAO_Test {
     private final ProductDAO_impl productDAO = new ProductDAO_impl();
 
     @Test
-    void testAddProduct() {
-        Product product = new Product();
-        product.setPrice(BigDecimal.valueOf(10.99));
+    @Override
+    public void addTest() {
+        Product product = Product.builder()
+                .name("Test Products")
+                .categoryId(1L)
+                .subCategoryId(2L)
+                .price(BigDecimal.valueOf(99.99))
+                .build();
 
         int productId = productDAO.add(product);
-
-        assertTrue(productId > 0, "Product ID should be greater than 0");
+        assert productId > 0 : "Failed to add Products. ID is not greater than 0.";
+        System.out.println("addTest passed.");
     }
 
     @Test
-    void testUpdateProduct() {
-        Product product = new Product();
-        product.setId(1L); // Припустимо, у базі є продукт із ID 1
-        product.setPrice(BigDecimal.valueOf(15.99));
+    @Override
+    public void updateTest() {
+        Product product = Product.builder()
+                .id(1L)
+                .name("Updated Products")
+                .categoryId(1L)
+                .subCategoryId(2L)
+                .price(BigDecimal.valueOf(149.99))
+                .build();
 
-        int rowsUpdated = productDAO.update(product);
-
-        assertEquals(1, rowsUpdated, "Exactly 1 row should be updated");
+        int rowsAffected = productDAO.update(product);
+        assert rowsAffected == 1 : "Failed to update Products. Rows affected: " + rowsAffected;
+        System.out.println("updateTest passed.");
     }
 
     @Test
-    void testDeleteProduct() {
-        int productId = 1; // Припустимо, у базі є продукт із ID 1
-
-        int rowsDeleted = productDAO.delete(productId);
-
-        assertEquals(1, rowsDeleted, "Exactly 1 row should be deleted");
+    @Override
+    public void deleteTest() {
+        Long productIdToDelete = 1L;
+        int rowsDeleted = productDAO.delete(productIdToDelete.intValue());
+        assert rowsDeleted == 1 : "Failed to delete product. Rows deleted: " + rowsDeleted;
+        System.out.println("deleteTest passed.");
     }
 
     @Test
-    void testShowAllProducts() {
-        productDAO.showAll();
-
-        // Перевірте результати виводу вручну у консолі або інтегруйте логіку для автоматичної перевірки.
-        assertTrue(true, "ShowAll executed successfully.");
+    @Override
+    public void showAllTest() {
+        System.out.println("Products:");
+        productDAO.showAll(); // Перевірка візуально через консоль
+        System.out.println("showAllTest completed.");
     }
 
     @Test
-    void testAddDessert() {
-        Category category = new Category();
-        category.setName("Desserts");
-
-        SubCategory subCategory = new SubCategory();
-        subCategory.setName("Cakes");
-
-        Product product = new Product();
-        product.setName("Test Cake");
-        product.setPrice(BigDecimal.valueOf(20.99));
-
-        int productId = productDAO.addDessert(product, category, subCategory);
-
-        assertTrue(productId > 0, "Product ID should be greater than 0");
+    @Override
+    public void checkOFNullTest() {
+        Product product = null;
+        boolean isNull = productDAO.checkOFNull(product);
+        assert isNull : "Failed to identify null product.";
+        System.out.println("checkOFNullTest passed.");
     }
 
     @Test
-    void testUpdatePriceDrink_FilterType() {
-        SubCategory subCategory = new SubCategory();
-        subCategory.setId(2L); // Припустимо, у базі є підкатегорія з ID 2
+    @Override
+    public void addDessertTest() {
+        Product product = Product.builder()
+                .name("Chocolate Cake")
+                .categoryId(1L) // ID категорії "Desserts"
+                .subCategoryId(2L) // ID підкатегорії "Cakes"
+                .price(BigDecimal.valueOf(25.99))
+                .build();
 
-        int rowsUpdated = productDAO.updatePriceDrink_FilterType(subCategory, 12.99);
-
-        assertTrue(rowsUpdated > 0, "At least 1 row should be updated");
+        int productId = productDAO.addDessert(product, new Category("Desserts"), new SubCategory("Cakes"));
+        assert productId > 0 : "Failed to add dessert. ID is not greater than 0.";
+        System.out.println("addDessertTest passed.");
     }
 
     @Test
-    void testShowAllDessertsWithNames() {
-        Category category = new Category();
-        category.setName("Desserts");
+    @Override
+    public void showAllDessertsWithNamesTest() {
+        Category category = new Category("Desserts");
+        Language language = new Language("en", "English");
 
-        Language language = new Language();
-        language.setCode("en");
-
+        System.out.println("Desserts:");
         productDAO.showAllDessertsWithNames(category, language);
-
-        // Перевірте результати виводу вручну у консолі.
-        assertTrue(true, "ShowAllDessertsWithNames executed successfully.");
+        System.out.println("showAllDessertsWithNamesTest completed.");
     }
 
     @Test
-    void testShowAllDrinksWithNames() {
-        Category category = new Category();
-        category.setName("Drinks");
+    @Override
+    public void updatePriceDrink_FilterTypeTest() {
+        SubCategory subCategory = new SubCategory("Coffee");
+        BigDecimal newPrice = BigDecimal.valueOf(3.99);
 
-        Language language = new Language();
-        language.setCode("en");
+        int rowsUpdated = productDAO.updatePriceDrink_FilterType(subCategory, newPrice.doubleValue());
+        assert rowsUpdated > 0 : "Failed to update drink prices. Rows updated: " + rowsUpdated;
+        System.out.println("updatePriceDrink_FilterTypeTest passed.");
+    }
 
+    @Test
+    @Override
+    public void showAllDrinksWithNamesTest() {
+        Category category = new Category("Drinks");
+        Language language = new Language("en", "English");
+
+        System.out.println("Drinks:");
         productDAO.showAllDrinksWithNames(category, language);
-
-        // Перевірте результати виводу вручну у консолі.
-        assertTrue(true, "ShowAllDrinksWithNames executed successfully.");
+        System.out.println("showAllDrinksWithNamesTest completed.");
     }
 }

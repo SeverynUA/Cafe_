@@ -1,73 +1,65 @@
--- Вставка даних у таблицю languages
-INSERT INTO languages (code, name) VALUES
-   ('en', 'English'),
-   ('uk', 'Ukrainian'),
-   ('fr', 'French');
 
--- Вставка даних у таблицю job_positions
-INSERT INTO job_positions (name, description) VALUES
-    ('Manager', 'Oversees operations'),
-    ('Developer', 'Builds and maintains software'),
-    ('Designer', 'Creates design and user interfaces');
+INSERT INTO Languages (code, name) VALUES
+('en', 'English'),
+('uk', 'Ukrainian'),
+('es', 'Spanish');
 
--- Вставка даних у таблицю employees
-INSERT INTO employees (first_name, last_name, middle_name, job_position_id, hire_date)VALUES
-    ('John', 'Doe', 'A.', 1, '2020-01-15'),
-    ('Jane', 'Smith', 'B.', 2, '2021-05-20'),
-    ('Alice', 'Johnson', NULL, 3, '2019-11-30');
+INSERT INTO Category (name) VALUES
+('Beverages'),
+('Snacks'),
+('Desserts');
 
--- Вставка даних у таблицю employee_contacts
-INSERT INTO employee_contacts (employee_id, phone_number, email)VALUES
-    (1, '+123456789', 'john.doe@example.com'),
-    (2, '+987654321', 'jane.smith@example.com'),
-    (3, '+192837465', 'alice.johnson@example.com');
+INSERT INTO SubCategory (name, category_Id) VALUES
+('Coffee', 1), -- ID '1' відповідає "Beverages"
+('Tea', 1),
+('Chips', 2), -- ID '2' відповідає "Snacks"
+('Cookies', 3); -- ID '3' відповідає "Desserts"
 
--- Вставка даних у таблицю employee_addresses
-INSERT INTO employee_addresses (employee_id, address_line1, address_line2, city, country, postal_code) VALUES
-    (1, '123 Main St', 'Apt 4B', 'New York', 'USA', '10001'),
-    (2, '456 Oak Ave', NULL, 'Los Angeles', 'USA', '90001'),
-    (3, '789 Pine Rd', 'Suite 300', 'Chicago', 'USA', '60601');
+INSERT INTO Products (name, category_id, subCategory_id, price) VALUES
+('Espresso', 1, 1, 2.99), -- Category: Beverages, SubCategory: Coffee
+('Green Tea', 1, 2, 1.99), -- Category: Beverages, SubCategory: Tea
+('Potato Chips', 2, 3, 1.49), -- Category: Snacks, SubCategory: Chips
+('Chocolate Cookies', 3, 4, 3.99); -- Category: Desserts, SubCategory: Cookies
 
--- Вставка даних у таблицю products
-INSERT INTO products (name, category_id, price) VALUES
-    ('Coffee', 1, 4.99),
-    ('Tea', 1, 3.50),
-     ('Sandwich', 2, 5.99);
+INSERT INTO Statuses (name, description) VALUES
+('Pending', 'Order is pending confirmation'),
+('Completed', 'Order has been completed'),
+('Cancelled', 'Order has been cancelled');
 
--- Вставка даних у таблицю translations
-INSERT INTO translations (product_id, language_code, name) VALUES
-     (1, 'en', 'Coffee'),
-     (1, 'uk', 'Кава'),
-     (1, 'fr', 'Café'),
-     (2, 'en', 'Tea'),
-     (2, 'uk', 'Чай'),
-     (2, 'fr', 'Thé');
+INSERT INTO Customer (firstName, lastName, middleName, birthDate, email, phoneNumber, sale) VALUES
+('John', 'Doe', 'A.', '1990-05-15', 'john.doe@example.com', '555-1234', 10.00),
+('Jane', 'Smith', 'B.', '1985-08-20', 'jane.smith@example.com', '555-5678', 5.00);
 
--- Вставка даних у таблицю statuses
-INSERT INTO statuses (name, description) VALUES
-     ('Pending', 'Order is pending'),
-     ('Confirmed', 'Order is confirmed'),
-     ('Shipped', 'Order is shipped');
+INSERT INTO Orders (order_date, order_amount, status_id) VALUES
+('2024-12-30 10:00:00', 15.97, 1), -- Status: Pending
+('2024-12-30 12:00:00', 9.98, 2); -- Status: Completed
 
--- Вставка даних у таблицю orders
-INSERT INTO orders (order_date, order_amount, status_id) VALUES
-      ('2023-12-30 10:00:00', 15.48, 1),
-      ('2023-12-30 11:00:00', 9.99, 2),
-      ('2023-12-30 12:00:00', 25.50, 3);
+INSERT INTO Order_details (order_id, product_id, quantity) VALUES
+(1, 1, 2), -- Order 1, Espresso x2
+(1, 2, 1), -- Order 1, Green Tea x1
+(2, 3, 3); -- Order 2, Potato Chips x3
 
--- Вставка даних у таблицю order_details
-INSERT INTO order_details (order_id, product_id, quantity) VALUES
-     (1, 1, 2),
-     (1, 2, 1),
-     (2, 3, 3);
+INSERT INTO Job_positions (name, description) VALUES
+('Barista', 'Prepares coffee and other beverages'),
+('Confectioner', 'Prepares meals and snacks'),
+('Cashier', 'Handles payments and customer orders');
 
--- Вставка даних у таблицю shifts
-INSERT INTO shifts (name, description, start_date, end_date, start_time, end_time, employee_id) VALUES
-     ('Morning Shift', 'Work from 9 AM to 5 PM', '2023-12-30', '2023-12-30', '09:00:00', '17:00:00', 1),
-     ('Evening Shift', 'Work from 5 PM to 1 AM', '2023-12-30', '2023-12-30', '17:00:00', '01:00:00', 2);
+INSERT INTO Employees (first_name, last_name, middle_name, job_position_id, hire_date) VALUES
+('Alice', 'Johnson', 'C.', 1, '2022-01-15'), -- Barista
+('Bob', 'Williams', 'D.', 2, '2023-03-10'); -- Confectioner
 
--- Вставка даних у таблицю work_schedules
-INSERT INTO work_schedules (employee_id, start_work_day, end_work_day, start_time, end_time, is_holiday) VALUES
-     (1, '2023-12-30', '2023-12-30', '09:00:00', '17:00:00', FALSE),
-     (2, '2023-12-30', '2023-12-30', '17:00:00', '01:00:00', FALSE),
-     (3, '2023-12-31', '2023-12-31', '10:00:00', '14:00:00', TRUE);
+INSERT INTO Employee_contacts (employee_id, phone_number, email) VALUES
+(1, '555-8765', 'alice.johnson@example.com'),
+(2, '555-4321', 'bob.williams@example.com');
+
+INSERT INTO Employee_addresses (employee_id, address_line1, address_line2, city, country, postal_code) VALUES
+(1, '123 Coffee Lane', NULL, 'Brewtown', 'CoffeeLand', '12345'),
+(2, '456 Snack Street', 'Apt 9', 'Snackville', 'SnackLand', '67890');
+
+INSERT INTO Shifts (name, description, start_date, end_date, start_time, end_time, employee_id) VALUES
+('Morning Shift', 'Morning working hours', '2024-12-30', '2024-12-30', '08:00:00', '12:00:00', 1),
+('Afternoon Shift', 'Afternoon working hours', '2024-12-30', '2024-12-30', '13:00:00', '17:00:00', 2);
+
+INSERT INTO Work_schedules (employee_id, start_work_day, end_work_day, start_time, end_time, is_holiday) VALUES
+(1, '2024-12-30', '2024-12-30', '08:00:00', '12:00:00', FALSE),
+(2, '2024-12-30', '2024-12-30', '13:00:00', '17:00:00', FALSE);

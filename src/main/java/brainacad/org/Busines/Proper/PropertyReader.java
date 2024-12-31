@@ -1,4 +1,4 @@
-package brainacad.org.Busines;
+package brainacad.org.Busines.Proper;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,11 +6,6 @@ import java.io.IOException;
 import java.util.Properties;
 
 import static java.lang.System.getProperty;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
 
 public class PropertyReader {
     public Properties readProperties(String environment) throws IOException {

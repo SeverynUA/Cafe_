@@ -1,4 +1,4 @@
-package brainacad.org.Dao.DB_Dao.SubCategory;
+package brainacad.org.Dao.DB_Dao.SubCategoryDAO;
 
 import brainacad.org.Dao.DB_Dao.QueryExecutor;
 import brainacad.org.Models.Categories.SubCategory;

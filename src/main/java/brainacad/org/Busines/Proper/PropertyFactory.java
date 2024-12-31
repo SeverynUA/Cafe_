@@ -1,7 +1,4 @@
-package brainacad.org.Busines;
-
-import java.io.IOException;
-import java.util.Properties;
+package brainacad.org.Busines.Proper;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -32,7 +29,14 @@ public class PropertyFactory {
         return instance;
     }
 
-    public static Properties getProperties() {
+    public static Properties getProperties()
+    {
+        if (instance == null) {
+            getInstance();
+        }
+        if (properties == null) {
+            throw new IllegalStateException("Властивості не були ініціалізовані.");
+        }
         return properties;
     }
 }

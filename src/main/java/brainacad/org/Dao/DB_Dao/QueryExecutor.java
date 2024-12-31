@@ -1,79 +1,61 @@
-package brainacad.org.Database;
+package brainacad.org.Dao.DB_Dao;
+
+import brainacad.org.Busines.Proper.DatabaseUtil;
 
 import java.sql.*;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.logging.Logger;
 
-public class QueryExecutor
-{
+public class QueryExecutor {
+    private static final Logger logger = Logger.getLogger(QueryExecutor.class.getName());
+
     // Виконує запити типу INSERT, UPDATE, DELETE (зміна даних)
-    public int executeUpdate(String sql, Object... params)
-    {
+    public int executeUpdate(String sql, Object... params) {
         try (Connection connection = DatabaseUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql))
-        {
+             PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            System.out.println("Executing SQL: " + sql);
-            System.out.println("Parameters: ");
-            for (int i = 0; i < params.length; i++) {
-                System.out.println("Param[" + (i + 1) + "]: " + params[i]);
-                statement.setObject(i + 1, params[i]);
-            }
+            logQuery(sql, params);
 
+            setParameters(statement, params);
             return statement.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("SQL Execution Error: " + e.getMessage());
-            e.printStackTrace();
-            return 0;
+            logger.severe("SQL Execution Error: " + e.getMessage());
+            throw new RuntimeException("Error executing update query.", e);
         }
     }
 
-
-
     // Виконує INSERT-запити і повертає згенерований ID
-    public int executeInsertAndReturnId(String sql, Object... params)
-    {
+    public int executeInsertAndReturnId(String sql, Object... params) {
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            for (int i = 0; i < params.length; i++)
-            {
-                statement.setObject(i + 1, params[i]);
-            }
-
+            setParameters(statement, params);
             int affectedRows = statement.executeUpdate();
+
             if (affectedRows > 0) {
-                try (ResultSet generatedKeys = statement.getGeneratedKeys())
-                {
-                    if (generatedKeys.next())
-                    {
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
                         return generatedKeys.getInt(1);
                     }
                 }
             }
             return -1;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
+            logger.severe("SQL Execution Error: " + e.getMessage());
+            throw new RuntimeException("Error executing insert query.", e);
         }
     }
 
-    public String executeInsertAndReturnChar(String sql, Object... params)
-    {
+    // Виконує INSERT-запити і повертає згенерований ключ у вигляді рядка
+    public String executeInsertAndReturnGeneratedKey(String sql, Object... params) {
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            for (int i = 0; i < params.length; i++) {
-                statement.setObject(i + 1, params[i]);
-            }
-
+            setParameters(statement, params);
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows > 0) {
-                try (ResultSet generatedKeys = statement.getGeneratedKeys())
-                {
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         return generatedKeys.getString(1);
                     }
@@ -81,28 +63,39 @@ public class QueryExecutor
             }
             return null;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            logger.severe("SQL Execution Error: " + e.getMessage());
+            throw new RuntimeException("Error executing insert query.", e);
         }
     }
 
-
     // Виконує SELECT-запити і повертає ResultSet
-    public ResultSet executeQuery(String sql, Object... params)
-    {
+    public ResultSet executeQuery(String sql, Object... params) {
         try {
             Connection connection = DatabaseUtil.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql);
 
-            for (int i = 0; i < params.length; i++)
-            {
-                statement.setObject(i + 1, params[i]);
-            }
+            setParameters(statement, params);
+            logQuery(sql, params);
 
-            return statement.executeQuery();
+            return statement.executeQuery(); // Важливо: Закриття ресурсів має виконувати користувач
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe("SQL Execution Error: " + e.getMessage());
+            throw new RuntimeException("Error executing select query.", e);
         }
-        return null;
+    }
+
+    // Допоміжний метод для установки параметрів у PreparedStatement
+    private void setParameters(PreparedStatement statement, Object... params) throws SQLException {
+        for (int i = 0; i < params.length; i++) {
+            statement.setObject(i + 1, params[i]);
+        }
+    }
+
+    // Логування SQL-запитів і параметрів
+    private void logQuery(String sql, Object... params) {
+        logger.info("Executing SQL: " + sql);
+        for (int i = 0; i < params.length; i++) {
+            logger.info("Param[" + (i + 1) + "]: " + params[i]);
+        }
     }
 }

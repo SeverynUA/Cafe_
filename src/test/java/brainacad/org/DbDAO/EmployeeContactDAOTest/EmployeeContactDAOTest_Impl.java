@@ -1,12 +1,9 @@
-package brainacad.org.DbDAO.EmployeeContact;
+package brainacad.org.DbDAO.EmployeeContactDAOTest;
 
-import brainacad.org.Dao.DB_Dao.EmpoloyeeContactDAO.EmployeeContactDAO;
 import brainacad.org.Dao.DB_Dao.EmpoloyeeContactDAO.EmployeeContactDAO_Impl;
-import brainacad.org.Dao.DB_Dao.ProductDAO.ProductDAO_impl;
 import brainacad.org.Models.Employee.Employee;
 import brainacad.org.Models.EmployeeInfo.EmployeeContact;
 import brainacad.org.Models.EmployeeInfo.JobPosition;
-import brainacad.org.Models.Product.Product;
 import org.junit.jupiter.api.Test;
 
 public class EmployeeContactDAOTest_Impl implements EmployeeContactDAO_Test
