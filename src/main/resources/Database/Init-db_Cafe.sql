@@ -30,15 +30,6 @@ INSERT INTO Customer (firstName, lastName, middleName, birthDate, email, phoneNu
 ('John', 'Doe', 'A.', '1990-05-15', 'john.doe@example.com', '555-1234', 10.00),
 ('Jane', 'Smith', 'B.', '1985-08-20', 'jane.smith@example.com', '555-5678', 5.00);
 
-INSERT INTO Orders (order_date, order_amount, status_id) VALUES
-('2024-12-30 10:00:00', 15.97, 1), -- Status: Pending
-('2024-12-30 12:00:00', 9.98, 2); -- Status: Completed
-
-INSERT INTO Order_details (order_id, product_id, quantity) VALUES
-(1, 1, 2), -- Order 1, Espresso x2
-(1, 2, 1), -- Order 1, Green Tea x1
-(2, 3, 3); -- Order 2, Potato Chips x3
-
 INSERT INTO Job_positions (name, description) VALUES
 ('Barista', 'Prepares coffee and other beverages'),
 ('Confectioner', 'Prepares meals and snacks'),
@@ -47,6 +38,15 @@ INSERT INTO Job_positions (name, description) VALUES
 INSERT INTO Employees (first_name, last_name, middle_name, job_position_id, hire_date) VALUES
 ('Alice', 'Johnson', 'C.', 1, '2022-01-15'), -- Barista
 ('Bob', 'Williams', 'D.', 2, '2023-03-10'); -- Confectioner
+
+INSERT INTO Orders (order_date, order_amount, status_id,employee_id,customer_id) VALUES
+('2024-12-30 10:00:00', 15.97, 1,1,1), -- Status: Pending
+('2024-12-30 12:00:00', 9.98, 2,2,2); -- Status: Completed
+
+INSERT INTO Order_Details (order_id, product_id, quantity) VALUES
+(1, 1, 2), -- Order 1, Espresso x2
+(1, 2, 1), -- Order 1, Green Tea x1
+(2, 3, 3); -- Order 2, Potato Chips x3
 
 INSERT INTO Employee_contacts (employee_id, phone_number, email) VALUES
 (1, '555-8765', 'alice.johnson@example.com'),

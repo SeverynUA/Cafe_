@@ -54,24 +54,6 @@ CREATE TABLE Statuses (
     description TEXT
 );
 
-
-CREATE TABLE Orders (
-   id BIGSERIAL  PRIMARY KEY,
-   order_date TIMESTAMP NOT NULL,
-   order_amount DECIMAL(10, 2) NOT NULL,
-   status_id BIGINT NOT NULL,
-   FOREIGN KEY (status_id) REFERENCES Statuses(id) ON DELETE CASCADE
-);
-
-CREATE TABLE Order_details (
-    id BIGSERIAL  PRIMARY KEY,
-    order_id BIGINT NOT NULL,
-    product_id BIGINT NOT NULL,
-    quantity INT NOT NULL CHECK (quantity > 0),
-    FOREIGN KEY (order_id) REFERENCES Orders(id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES Products(id) ON DELETE CASCADE
-);
-
 CREATE TABLE Job_positions (
     id BIGSERIAL  PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -88,6 +70,26 @@ CREATE TABLE Employees (
     FOREIGN KEY (job_position_id) REFERENCES Job_positions(id) ON DELETE CASCADE
 );
 
+CREATE TABLE Orders (
+   id BIGSERIAL  PRIMARY KEY,
+   order_date TIMESTAMP NOT NULL,
+   order_amount DECIMAL(10, 2) NOT NULL,
+   status_id BIGINT NOT NULL,
+   employee_id BIGINT  NOT NULL,
+   customer_id BIGINT  NOT NULL,
+   FOREIGN KEY (employee_id) REFERENCES Employees(id) ON DELETE CASCADE,
+   FOREIGN KEY (customer_id) REFERENCES Customer(id) ON DELETE CASCADE,
+   FOREIGN KEY (status_id) REFERENCES Statuses(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Order_Details (
+    id BIGSERIAL  PRIMARY KEY,
+    order_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    quantity INT NOT NULL CHECK (quantity > 0),
+    FOREIGN KEY (order_id) REFERENCES Orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES Products(id) ON DELETE CASCADE
+);
 
 CREATE TABLE Employee_contacts (
     id BIGSERIAL  PRIMARY KEY,
