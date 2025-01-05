@@ -9,6 +9,7 @@ import brainacad.org.Models.Product.Product;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class OrderDetailsDAO_Impl implements OrderDetailsDAO
 {
@@ -99,6 +100,16 @@ public class OrderDetailsDAO_Impl implements OrderDetailsDAO
         }
 
         return orderDAO_Impl.delete(Math.toIntExact((order.getId())));
+    }
+
+    @Override
+    public int AmountOrdersOfDesserts_filterDay(LocalDate localDate) {
+        return 0;
+    }
+
+    @Override
+    public int AmountOrdersOfDrinks_filterDay(LocalDate localDate) {
+        return 0;
     }
 
     private String ReturnCategoryByProduct(Product product)

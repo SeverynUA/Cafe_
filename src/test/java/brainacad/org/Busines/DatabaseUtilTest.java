@@ -17,7 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DatabaseUtilTest {
 
     @BeforeAll
-    void setUp() throws IOException {
+    void setUp() throws IOException
+    {
         PropertyReader reader = new PropertyReader();
         Properties properties = reader.readProperties("test");
 
@@ -30,17 +31,21 @@ public class DatabaseUtilTest {
     }
 
     @Test
-    void testGetConnection() {
-        try (Connection connection = DatabaseUtil.getConnection()) {
+    void testGetConnection()
+    {
+        try (Connection connection = DatabaseUtil.getConnection())
+        {
             assertNotNull(connection, "З'єднання з базою даних не повинно бути null");
             assertTrue(connection.isValid(2), "З'єднання з базою даних недійсне");
-        } catch (SQLException e) {
+        } catch (SQLException e)
+        {
             fail("Не вдалося встановити з'єднання: " + e.getMessage());
         }
     }
 
     @Test
-    void testExecuteUpdate() {
+    void testExecuteUpdate()
+    {
         String createTableQuery = "CREATE TABLE test_table (id SERIAL PRIMARY KEY, price NUMERIC)";
         DatabaseUtil.executeUpdate(createTableQuery);
 
@@ -52,31 +57,38 @@ public class DatabaseUtilTest {
     }
 
     @Test
-    void testExecuteQuery() {
+    void testExecuteQuery()
+    {
         String selectQuery = "SELECT price FROM test_table WHERE id = ?";
-        try (ResultSet resultSet = DatabaseUtil.executeQuery(selectQuery, 1)) {
+        try (ResultSet resultSet = DatabaseUtil.executeQuery(selectQuery, 1))
+        {
             assertTrue(resultSet.next(), "Результат SELECT-запиту має містити дані");
             BigDecimal price = resultSet.getBigDecimal("price");
             assertEquals(BigDecimal.valueOf(109.99), price, "Ціна не співпадає із очікуваною");
-        } catch (SQLException e) {
+        } catch (SQLException e)
+        {
             fail("Помилка під час виконання SELECT-запиту: " + e.getMessage());
         }
     }
 
     @Test
-    void testResetDatabase() {
+    void testResetDatabase()
+    {
         DatabaseUtil.resetDatabase();
         // Перевірка, чи таблиці були видалені
         String checkQuery = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'";
-        try (ResultSet resultSet = DatabaseUtil.executeQuery(checkQuery)) {
+        try (ResultSet resultSet = DatabaseUtil.executeQuery(checkQuery))
+        {
             assertFalse(resultSet.next(), "Після скидання бази даних жодна таблиця не повинна існувати");
-        } catch (SQLException e) {
+        } catch (SQLException e)
+        {
             fail("Помилка під час перевірки скидання бази даних: " + e.getMessage());
         }
     }
 
     @Test
-    void testExecuteSQLFiles() {
+    void testExecuteSQLFiles()
+    {
         // Виконання SQL-файлів
         DatabaseUtil.executeSQLFiles(
                 "src/main/resources/Database/CreateTables-db_Cafe.sql",
@@ -85,14 +97,17 @@ public class DatabaseUtilTest {
 
         // Перевірка існування таблиці Languages
         String checkTableQuery = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'languages')";
-        try (ResultSet resultSet = DatabaseUtil.executeQuery(checkTableQuery)) {
-            if (resultSet.next()) {
+        try (ResultSet resultSet = DatabaseUtil.executeQuery(checkTableQuery))
+        {
+            if (resultSet.next())
+            {
                 boolean tableExists = resultSet.getBoolean(1);
                 assertTrue(tableExists, "Таблиця 'languages' повинна існувати після виконання SQL-файлу.");
             } else {
                 fail("Не вдалося перевірити наявність таблиці 'languages'.");
             }
-        } catch (SQLException e) {
+        } catch (SQLException e)
+        {
             fail("SQL-помилка під час перевірки таблиці 'languages': " + e.getMessage());
         }
 

@@ -35,9 +35,9 @@ INSERT INTO Job_positions (name, description) VALUES
 ('Confectioner', 'Prepares meals and snacks'),
 ('Cashier', 'Handles payments and customer orders');
 
-INSERT INTO Employees (first_name, last_name, middle_name, job_position_id, hire_date) VALUES
-('Alice', 'Johnson', 'C.', 1, '2022-01-15'), -- Barista
-('Bob', 'Williams', 'D.', 2, '2023-03-10'); -- Confectioner
+INSERT INTO Employees (first_name, last_name, middle_name, job_position_id, hire_date,birthday) VALUES
+('Alice', 'Johnson', 'C.', 1, '2022-01-15','2004-03-05'), -- Barista
+('Bob', 'Williams', 'D.', 2, '2023-03-10','1983-01-03'); -- Confectioner
 
 INSERT INTO Orders (order_date, order_amount, status_id,employee_id,customer_id) VALUES
 ('2024-12-30 10:00:00', 15.97, 1,1,1), -- Status: Pending

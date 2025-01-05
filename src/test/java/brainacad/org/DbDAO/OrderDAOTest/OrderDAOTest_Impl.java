@@ -26,7 +26,7 @@ public class OrderDAOTest_Impl implements OrderDAOTest
     public void addTest()
     {
         JobPosition jobPosition = new JobPosition(1L, "Barista", "Prepares coffee and other beverages");
-        Employee employee = new Employee(1L, "Alice", "Johnson", "C.", jobPosition, LocalDate.of(2022, 1, 15));
+        Employee employee = new Employee(1L, "Alice", "Johnson", "C.", jobPosition, LocalDate.of(2022, 1, 15),LocalDate.of(2022, 1, 15));
         Customer customer = Customer.builder().id(2L).firstName("Alice").lastName("Smith").build();
 
         Order order = Order.builder()
@@ -47,7 +47,7 @@ public class OrderDAOTest_Impl implements OrderDAOTest
     public void updateTest()
     {
         JobPosition jobPosition = new JobPosition(1L, "Barista", "Prepares coffee and other beverages");
-        Employee employee = new Employee(1L, "Alice", "Johnson", "C.", jobPosition, LocalDate.of(2022, 1, 15));
+        Employee employee = new Employee(1L, "Alice", "Johnson", "C.", jobPosition, LocalDate.of(2022, 1, 15),LocalDate.of(2022, 1, 15));
         Customer customer = Customer.builder().id(2L).firstName("Alice").lastName("Smith").build();
 
         Order order = Order.builder()
@@ -99,7 +99,7 @@ public class OrderDAOTest_Impl implements OrderDAOTest
     public void showAllOrders_filterEmployeeTest()
     {
         JobPosition jobPosition = new JobPosition(1L, "Barista", "Prepares coffee and other beverages");
-        Employee employee = new Employee(1L, "Alice", "Johnson", "C.", jobPosition, LocalDate.of(2022, 1, 15));
+        Employee employee = new Employee(1L, "Alice", "Johnson", "C.", jobPosition, LocalDate.of(2022, 1, 15),LocalDate.of(2022, 1, 15));
 
         System.out.println("Orders filtered by Employee:");
         orderDAO_Impl.showAllOrders_filterEmployee(employee);
@@ -114,6 +114,42 @@ public class OrderDAOTest_Impl implements OrderDAOTest
 
         System.out.println("Orders filtered by Customer:");
         orderDAO_Impl.showAllOrders_filterCustomer(customer);
-        System.out.println("showAllOrders_filterCustomerTest completed for Customer.");
+        System.out.println("showAllOrders_filterCustomerTest completed for Order.");
+    }
+
+    @Test
+    @Override
+    public void ShowAllOrdersFilterDate_sortByDay_returnListOfOrders()
+    {
+        LocalDate localDate = LocalDate.of(2024,12,30);
+        orderDAO_Impl. ShowAllOrders_filterDate(localDate);
+        System.out.println("ShowAllOrdersFilterDate_sortByDay_returnListOfOrders completed for Order.");
+    }
+
+    @Test
+    @Override
+    public void ShowAverageAmountOrdersFilterDate_sortByDay_returnAverageAmountOfOrders()
+    {
+        LocalDate localDate = LocalDate.of(2024,12,30);
+        orderDAO_Impl. ShowAverageAmountOrders_filterDate(localDate);
+        System.out.println("ShowAverageAmountOrdersFilterDate_sortByDay_returnAverageAmountOfOrders completed for Order.");
+    }
+
+    @Test
+    @Override
+    public void ShowMaxAmountOrdersFilterDate_sortByDayAndFalse_returnAverageAmountOfOrdersWithoutCustomer()
+    {
+        LocalDate localDate = LocalDate.of(2024,12,30);
+        orderDAO_Impl. ShowMaxAmountOrders_filterDate(localDate,false);
+        System.out.println("ShowMaxAmountOrdersFilterDate_sortByDayAndFalse_returnAverageAmountOfOrdersWithoutCustomer completed for Order.");
+    }
+
+    @Test
+    @Override
+    public void ShowMaxAmountOrdersFilterDate_sortByDayAndTrue_returnAverageAmountOfOrdersWithCustomer()
+    {
+        LocalDate localDate = LocalDate.of(2024,12,30);
+        orderDAO_Impl. ShowMaxAmountOrders_filterDate(localDate,true);
+        System.out.println("ShowMaxAmountOrdersFilterDate_sortByDayAndFalse_returnAverageAmountOfOrdersWithoutCustomer completed for Order.");
     }
 }

@@ -102,7 +102,7 @@ public class OrderDetailsDAOTest_Impl implements OrderDetailsDEOTest
         order.setOrderAmount(BigDecimal.valueOf(12.00));
         order.setStatus(new Statuses(1L, "Pending", "Order is pending"));
         order.setEmployee(new Employee(1L, "Alice", "Johnson", "C.",
-                new JobPosition(1L, "Barista", "Prepares coffee"), LocalDate.of(2022, 1, 15)));
+                new JobPosition(1L, "Barista", "Prepares coffee"), LocalDate.of(2022, 1, 15),LocalDate.of(2022, 1, 15)));
         order.setCustomer(new Customer(1L, "John", "Doe", "A.", LocalDate.of(1990, 5, 15), "john.doe@example.com", "555-1234", BigDecimal.valueOf(10.00)));
 
         int rowsDeleted = orderDetailsDAO_Impl.DeleteOrder_filterProductOfDessert(product, order);

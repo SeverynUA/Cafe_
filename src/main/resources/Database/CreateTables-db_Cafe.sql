@@ -67,6 +67,7 @@ CREATE TABLE Employees (
     middle_name VARCHAR(255),
     job_position_id BIGINT NOT NULL,
     hire_date DATE NOT NULL,
+    birthday DATE NOT NULL ,
     FOREIGN KEY (job_position_id) REFERENCES Job_positions(id) ON DELETE CASCADE
 );
 

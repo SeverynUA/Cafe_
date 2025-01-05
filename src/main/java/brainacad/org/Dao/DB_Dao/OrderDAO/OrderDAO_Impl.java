@@ -1,5 +1,8 @@
 package brainacad.org.Dao.DB_Dao.OrderDAO;
 
+import brainacad.org.Dao.DB_Dao.CustomerDAO.CustomerDAO_impl;
+import brainacad.org.Dao.DB_Dao.EmployeeDAO.EmployeeDAO;
+import brainacad.org.Dao.DB_Dao.EmployeeDAO.EmployeeDAO_Impl;
 import brainacad.org.Dao.DB_Dao.QueryExecutor;
 import brainacad.org.Models.Customer.Customer;
 import brainacad.org.Models.Employee.Employee;
@@ -9,6 +12,7 @@ import brainacad.org.Models.Product.Product;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class OrderDAO_Impl implements OrderDAO
 {
@@ -116,6 +120,115 @@ public class OrderDAO_Impl implements OrderDAO
                         ", Employee ID: " + resultSet.getLong("employee_id")+
                         ", Employee ID: " + resultSet.getString("customer_id"));
             }
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void ShowAllOrders_filterDate(LocalDate localDate)
+    {
+        String sql = "SELECT * FROM Orders WHERE order_date=?";
+
+        try (ResultSet resultSet = queryExecutor.executeQuery(sql , localDate))
+        {
+            while (resultSet.next())
+            {
+                System.out.println("Order id: " + resultSet.getLong("id") +
+                        ", Order Date: " + resultSet.getDate("order_date") +
+                        ", Order Amount: " + resultSet.getBigDecimal("order_amount") +
+                        ", Status ID: " + resultSet.getLong("status_id") +
+                        ", Employee ID: " + resultSet.getLong("employee_id")+
+                        ", Employee ID: " + resultSet.getString("customer_id"));
+            }
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void ShowAllCustomerAndEmployee_filterToday()
+    {
+        LocalDate localDate = LocalDate.now();
+
+        String sql = "SELECT * FROM Orders WHERE order_date=?";
+
+        String sqlEmployee = "SELECT employee_id FROM Employee  WHERE order_date=?";
+        String sqlCustomer = "SELECT customer_id FROM Employee  WHERE order_date=?";
+
+        int idEmployee = queryExecutor.executeQueryForId(sqlEmployee, localDate.toString());
+        int idCustomer = queryExecutor.executeQueryForId(sqlCustomer, localDate.toString());
+
+        if(idEmployee <= 0 && idCustomer <= 0)
+        {
+            ShowOrdersBySQL_FilterDate(sql,localDate);
+
+            EmployeeDAO_Impl employeeDAO_Impl = new EmployeeDAO_Impl();
+            employeeDAO_Impl.ShowEmployee(idEmployee);
+
+            CustomerDAO_impl customerDAO_impl = new CustomerDAO_impl();
+            customerDAO_impl.ShowCustomer(idCustomer);
+
+            System.out.println("///////////////////////////////////////");
+        }
+        else
+        {
+            throw new IllegalArgumentException("idEmployee cannot be null or idCustomer cannot be null");
+        }
+    }
+
+
+
+    @Override
+    public void ShowAverageAmountOrders_filterDate(LocalDate localDate) {
+        String sql = "SELECT AVG(order_amount) AS AverageValue FROM Orders WHERE order_date = ?";
+
+        try (ResultSet resultSet = queryExecutor.executeQuery(sql, localDate)) {
+            if (resultSet.next()) {
+                double averageAmount = resultSet.getDouble("AverageValue");
+                System.out.println("Average Order amount for date " + localDate + ": " + averageAmount);
+            } else {
+                System.out.println("No orders found for date: " + localDate);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error executing select query.", e);
+        }
+    }
+
+
+    @Override
+    public void ShowMaxAmountOrders_filterDate(LocalDate localDate , boolean withCustomer)
+    {
+        String sql = "SELECT * FROM Orders WHERE order_amount = " +
+                "(SELECT MAX(order_amount) FROM Orders WHERE DATE(order_date) = ?)";
+
+        ShowOrdersBySQL_FilterDate(sql,localDate);
+
+        if (withCustomer)
+        {
+            CustomerDAO_impl customerDAO_impl = new CustomerDAO_impl();
+            customerDAO_impl.ShowCustomer(queryExecutor.executeQueryForId(sql, localDate));
+        }
+
+    }
+
+
+    private void ShowOrdersBySQL_FilterDate(String sql , LocalDate localDate)
+    {
+        try (ResultSet resultSet = queryExecutor.executeQuery(sql,localDate))
+        {
+            while (resultSet.next())
+            {
+                System.out.println("Order id: " + resultSet.getLong("id") +
+                        ", Order Date: " + resultSet.getTimestamp("order_date") +
+                        ", Order Amount: " + resultSet.getBigDecimal("order_amount") +
+                        ", Status ID: " + resultSet.getLong("status_id") +
+                        ", Employee ID: " + resultSet.getLong("employee_id")+
+                        ", Customer ID: " + resultSet.getString("customer_id"));
+            }
+
         } catch (SQLException e)
         {
             e.printStackTrace();

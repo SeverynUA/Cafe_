@@ -18,7 +18,7 @@ public class ScheduleDAOTest_Impl implements ScheduleDAOTest
     public void addToCloseMondayTest()
     {
         Employee employee = new Employee(1L, "John", "Doe", "M.",
-                new JobPosition(1L, "Barista", "Prepares coffee"), LocalDate.of(2022, 5, 15));
+                new JobPosition(1L, "Barista", "Prepares coffee"), LocalDate.of(2022, 5, 15),LocalDate.of(2022, 1, 15));
         LocalTime startTime = LocalTime.of(9, 0);
         LocalTime endTime = LocalTime.of(17, 0);
 
@@ -34,7 +34,7 @@ public class ScheduleDAOTest_Impl implements ScheduleDAOTest
     public void updateToCloseTuesdayTest()
     {
         Employee employee = new Employee(1L, "John", "Doe", "M.",
-                new JobPosition(1L, "Barista", "Prepares coffee"), LocalDate.of(2022, 5, 15));
+                new JobPosition(1L, "Barista", "Prepares coffee"), LocalDate.of(2022, 5, 15),LocalDate.of(2022, 1, 15));
         WorkSchedules schedule = new WorkSchedules(1L, employee, LocalDate.of(2025, 1, 10), LocalDate.of(2025, 1, 10),
                 LocalTime.of(8, 0), LocalTime.of(16, 0), false);
 
@@ -53,7 +53,7 @@ public class ScheduleDAOTest_Impl implements ScheduleDAOTest
 
         scheduleDAO_Impl.add(new WorkSchedules(
                 1L,
-                new Employee(1L, "John", "Doe", "M.", new JobPosition(1L, "Barista", "Prepares coffee"), LocalDate.of(2022, 5, 15)),
+                new Employee(1L, "John", "Doe", "M.", new JobPosition(1L, "Barista", "Prepares coffee"), LocalDate.of(2022, 5, 15),LocalDate.of(2022, 1, 15)),
                 LocalDate.of(2025, 1, 15),
                 LocalDate.of(2025, 1, 15),
                 LocalTime.of(9, 0),
@@ -76,7 +76,7 @@ public class ScheduleDAOTest_Impl implements ScheduleDAOTest
         // Додання тестових даних
         scheduleDAO_Impl.add(new WorkSchedules(
                 1L,
-                new Employee(1L, "John", "Doe", "M.", new JobPosition(1L, "Barista", "Prepares coffee"), LocalDate.of(2022, 5, 15)),
+                new Employee(1L, "John", "Doe", "M.", new JobPosition(1L, "Barista", "Prepares coffee"), LocalDate.of(2022, 5, 15),LocalDate.of(2022, 1, 15)),
                 LocalDate.of(2025, 1, 10),
                 LocalDate.of(2025, 1, 15),
                 LocalTime.of(9, 0),
@@ -85,7 +85,7 @@ public class ScheduleDAOTest_Impl implements ScheduleDAOTest
         ));
         scheduleDAO_Impl.add(new WorkSchedules(
                 2L,
-                new Employee(2L, "Alice", "Smith", "L.", new JobPosition(2L, "Cashier", "Handles payments"), LocalDate.of(2023, 3, 1)),
+                new Employee(2L, "Alice", "Smith", "L.", new JobPosition(2L, "Cashier", "Handles payments"), LocalDate.of(2023, 3, 1),LocalDate.of(2022, 1, 15)),
                 LocalDate.of(2025, 1, 12),
                 LocalDate.of(2025, 1, 14),
                 LocalTime.of(10, 0),
@@ -122,7 +122,7 @@ public class ScheduleDAOTest_Impl implements ScheduleDAOTest
     public void addTest()
     {
         Employee employee = new Employee(2L, "Alice", "Smith", "L.",
-                new JobPosition(2L, "Cashier", "Handles payments"), LocalDate.of(2023, 3, 1));
+                new JobPosition(2L, "Cashier", "Handles payments"), LocalDate.of(2023, 3, 1),LocalDate.of(2022, 1, 15));
         WorkSchedules schedule = new WorkSchedules(0L, employee, LocalDate.of(2025, 2, 1), LocalDate.of(2025, 2, 1),
                 LocalTime.of(10, 0), LocalTime.of(18, 0), false);
 
@@ -136,7 +136,7 @@ public class ScheduleDAOTest_Impl implements ScheduleDAOTest
     public void updateTest()
     {
         Employee employee = new Employee(2L, "Alice", "Smith", "L.",
-                new JobPosition(2L, "Cashier", "Handles payments"), LocalDate.of(2023, 3, 1));
+                new JobPosition(2L, "Cashier", "Handles payments"), LocalDate.of(2023, 3, 1),LocalDate.of(2022, 1, 15));
         WorkSchedules schedule = new WorkSchedules(1L, employee, LocalDate.of(2025, 2, 2), LocalDate.of(2025, 2, 2),
                 LocalTime.of(9, 0), LocalTime.of(17, 0), true);
 

@@ -19,4 +19,16 @@ public class Employee {
     private String middleName;
     private JobPosition jobPosition;
     private LocalDate hireDate;
+    private LocalDate dateOfBirth;
+
+    public Employee(long l, String updatedAlice, String updatedJohnson, String s, JobPosition jobPosition, LocalDate of, LocalDate of1)
+    {
+        this.id = l;
+        this.firstName = updatedAlice;
+        this.lastName = updatedJohnson;
+        this.middleName = s;
+        this.jobPosition = jobPosition;
+        this.hireDate = of;
+        this.dateOfBirth = of1;
+    }
 }

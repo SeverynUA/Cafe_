@@ -2,6 +2,7 @@ package brainacad.org.Dao.DB_Dao.ScheduleDAO;
 
 import brainacad.org.Dao.DB_Dao.QueryExecutor;
 import brainacad.org.Models.Employee.Employee;
+import brainacad.org.Models.EmployeeInfo.JobPosition;
 import brainacad.org.Models.Schedule.WorkSchedules;
 import brainacad.org.Service.LocalDate.LocalDate_Service;
 
@@ -97,6 +98,21 @@ public class ScheduleDAO_Impl implements ScheduleDAO
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+    }
+
+    @Override
+    public void ShowAllByWeek(Employee employee) {
+
+    }
+
+    @Override
+    public void ShowAllByWeek(JobPosition jobPosition) {
+
+    }
+
+    @Override
+    public void ShowAllByWeek() {
 
     }
 

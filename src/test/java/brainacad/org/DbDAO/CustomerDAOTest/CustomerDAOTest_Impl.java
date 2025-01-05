@@ -2,6 +2,7 @@ package brainacad.org.DbDAO.CustomerDAOTest;
 import brainacad.org.Dao.DB_Dao.CustomerDAO.CustomerDAO_impl;
 import brainacad.org.Models.Customer.Customer;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.matchers.Null;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -78,4 +79,79 @@ public class CustomerDAOTest_Impl implements CustomerDAOTest
         System.out.println("checkOFNullTest passed for null Customer.");
     }
 
+    @Test
+    @Override
+    public void ShowCustomer_Id_returnCustomer()
+    {
+        int testId = 1;
+        customerDAO_Impl.ShowCustomer(testId);
+        System.out.println("ShowCustomer_Id_returnCustomer completed for Customer.");
+    }
+
+    @Test
+    @Override
+    public void ShowMinSale_showMinFromList_returnCustomer()
+    {
+        customerDAO_Impl.ShowMinSale();
+        System.out.println("ShowMinSale_showMinFromList_returnCustomer completed for Customer.");
+    }
+
+    @Test
+    @Override
+    public void ShowMinSale_showMaxFromList_returnCustomer()
+    {
+        customerDAO_Impl.ShowMaxSale();
+        System.out.println("ShowMinSale_showMinFromList_returnCustomer completed for Customer.");
+    }
+
+    @Test
+    @Override
+    public void ShowMinSale_showAvgFromList_returnAverage()
+    {
+        customerDAO_Impl.ShowAverageSale();
+        System.out.println("ShowMinSale_showAvgFromList_returnAverage completed for Customer.");
+    }
+
+    @Test
+    @Override
+    public void ShowTodayBirthday_showTodayBirthday_returnListOfCustomer()
+    {
+        LocalDate today = LocalDate.now();
+
+        Customer customer = Customer.builder()
+                .id(1L)
+                .firstName("Updated John")
+                .lastName("Updated Doe")
+                .middleName("U.")
+                .birthDate(LocalDate.of(1999,today.getMonthValue(), today.getDayOfMonth()))
+                .email("updated.john.doe@example.com")
+                .phoneNumber("555-4321")
+                .sale(BigDecimal.valueOf(20.00))
+                .build();
+
+        customerDAO_Impl.add(customer);
+
+        customerDAO_Impl.ShowTodayBirthday();
+
+        System.out.println("ShowTodayBirthday_showTodayBirthday_returnListOfCustomer completed for Customer.");
+    }
+
+    @Test
+    @Override
+    public void ShowCustomerEmailIsNUll_showEmailNull_returnListOfCustomer()
+    {
+        Customer customer = Customer.builder()
+                .id(1L)
+                .firstName("Updated John")
+                .lastName("Updated Doe")
+                .middleName("U.")
+                .birthDate(LocalDate.of(1999,1, 1))
+                .email(null)
+                .phoneNumber("555-4321")
+                .sale(BigDecimal.valueOf(20.00))
+                .build();
+
+        customerDAO_Impl.add(customer);
+        customerDAO_Impl.ShowCustomer_Email_IsNUll();
+    }
 }
